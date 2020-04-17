@@ -52,14 +52,17 @@ MessageInterpreter::MessageInterpreter(
     std::shared_ptr<ExceptionEncounteredSenderInterface> exceptionEncounteredSender,
     std::shared_ptr<DirectiveSequencerInterface> directiveSequencer,
     std::shared_ptr<AttachmentManagerInterface> attachmentManager,
-    std::shared_ptr<MetricRecorderInterface> metricRecorder) :
+    std::shared_ptr<MetricRecorderInterface> metricRecorder,
+    std::shared_ptr<TaurusDeviceProcessor> taurusDeviceProcessor) :
         m_exceptionEncounteredSender{exceptionEncounteredSender},
         m_directiveSequencer{directiveSequencer},
         m_attachmentManager{attachmentManager},
-        m_metricRecorder{metricRecorder} {
+        m_metricRecorder{metricRecorder},
+        m_taurusDeviceProcessor{taurusDeviceProcessor} {
 }
 
 void MessageInterpreter::receive(const std::string& contextId, const std::string& message) {
+    ACSDK_DEBUG1(LX("Received message").m(message));
     auto createResult = AVSDirective::create(message, m_attachmentManager, contextId);
     std::shared_ptr<AVSDirective> avsDirective{std::move(createResult.first)};
     if (!avsDirective) {

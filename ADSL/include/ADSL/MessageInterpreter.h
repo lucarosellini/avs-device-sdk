@@ -22,6 +22,7 @@
 #include <AVSCommon/SDKInterfaces/DirectiveSequencerInterface.h>
 #include <AVSCommon/SDKInterfaces/MessageObserverInterface.h>
 #include <AVSCommon/Utils/Metrics/MetricRecorderInterface.h>
+#include "TaurusDeviceProcessor.h"
 
 namespace alexaClientSDK {
 namespace adsl {
@@ -41,12 +42,14 @@ public:
      *        @c AVSDirectives.
      * @param attachmentManager The @c AttachmentManager which created @c AVSDirectives will use to acquire Attachments.
      * @param metricRecorder The metric recorder.
+     * @param taurusDeviceProcessor The Taurus Device Processor.
      */
     MessageInterpreter(
         std::shared_ptr<avsCommon::sdkInterfaces::ExceptionEncounteredSenderInterface> exceptionEncounteredSender,
         std::shared_ptr<avsCommon::sdkInterfaces::DirectiveSequencerInterface> directiveSequencer,
         std::shared_ptr<avsCommon::avs::attachment::AttachmentManagerInterface> attachmentManager,
-        std::shared_ptr<avsCommon::utils::metrics::MetricRecorderInterface> metricRecorder = nullptr);
+        std::shared_ptr<avsCommon::utils::metrics::MetricRecorderInterface> metricRecorder = nullptr,
+        std::shared_ptr<TaurusDeviceProcessor> taurusDeviceProcessor = nullptr);
 
     void receive(const std::string& contextId, const std::string& message) override;
 
@@ -59,6 +62,8 @@ private:
     std::shared_ptr<avsCommon::avs::attachment::AttachmentManagerInterface> m_attachmentManager;
     /// The metric recorder.
     std::shared_ptr<avsCommon::utils::metrics::MetricRecorderInterface> m_metricRecorder;
+
+    std::shared_ptr<TaurusDeviceProcessor> m_taurusDeviceProcessor;
 };
 
 }  // namespace adsl

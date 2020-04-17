@@ -6,7 +6,8 @@ add_library(ADSL SHARED
     DirectiveProcessor.cpp
     DirectiveRouter.cpp
     DirectiveSequencer.cpp
-    MessageInterpreter.cpp)
+    MessageInterpreter.cpp
+    TaurusDeviceProcessor.cpp)
 target_include_directories(ADSL PUBLIC
     "${ADSL_SOURCE_DIR}/include"
     "${AVSCommon_INCLUDE_DIRS}")
