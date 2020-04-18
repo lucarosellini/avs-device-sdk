@@ -34,6 +34,17 @@ TEST_F(TaurusDeviceProcessorTest, test_emptyMessage) {
     ASSERT_FALSE(m_processor->containsDeviceConfirmationTag(nullptr));
 }
 
+TEST_F(TaurusDeviceProcessorTest, test_decodeEmptyIdentificationCode) {
+    ASSERT_EQ("", m_processor->decodeDeviceIdentificationCode(""));
+}
+
+TEST_F(TaurusDeviceProcessorTest, test_decodeNonEmptyIdentificationCode) {
+
+    std::string message = std::string(" | \"  /  (  )  {  }  [  ]  *  ,  | ");
+    
+    ASSERT_EQ("1234567890", m_processor->decodeDeviceIdentificationCode(message));
+}
+
 
 }
 }
