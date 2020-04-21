@@ -52,13 +52,13 @@ MessageInterpreter::MessageInterpreter(
     std::shared_ptr<ExceptionEncounteredSenderInterface> exceptionEncounteredSender,
     std::shared_ptr<DirectiveSequencerInterface> directiveSequencer,
     std::shared_ptr<AttachmentManagerInterface> attachmentManager,
-    std::shared_ptr<MetricRecorderInterface> metricRecorder,
-    std::shared_ptr<TaurusDeviceProcessor> taurusDeviceProcessor) :
+    std::shared_ptr<MetricRecorderInterface> metricRecorder) :
         m_exceptionEncounteredSender{exceptionEncounteredSender},
         m_directiveSequencer{directiveSequencer},
         m_attachmentManager{attachmentManager},
-        m_metricRecorder{metricRecorder},
-        m_taurusDeviceProcessor{taurusDeviceProcessor} {
+        m_metricRecorder{metricRecorder} {
+
+    m_taurusDeviceProcessor = adsl::TaurusDeviceProcessor::create();
 }
 
 void MessageInterpreter::receive(const std::string& contextId, const std::string& message) {
@@ -102,6 +102,14 @@ void MessageInterpreter::receive(const std::string& contextId, const std::string
     }
 
     m_directiveSequencer->onDirective(avsDirective);
+
+    // processing the AVSDirective to check whether it's coming from Taurus companion skill or not.
+    std::string deviceIdentificationTag = m_taurusDeviceProcessor->decodeVolatileIdentificationCode(avsDirective->getPayload());
+    
+    if (!deviceIdentificationTag.empty()){
+        ACSDK_DEBUG1(LX("Message coming from Taurus companion skill and contains device confirmation tag").m(deviceIdentificationTag));
+        m_taurusDeviceProcessor->confirmDevice(deviceIdentificationTag);
+    }
 }
 
 }  // namespace adsl

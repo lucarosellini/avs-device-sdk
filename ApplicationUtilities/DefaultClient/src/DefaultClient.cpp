@@ -458,7 +458,7 @@ bool DefaultClient::initialize(
         ACSDK_ERROR(LX("initializeFailed").d("reason", "unableToCreateDirectiveSequencer"));
         return false;
     }
-
+    
     /*
      * Creating the Message Interpreter - This component takes care of converting
      * ACL messages to Directives for the
