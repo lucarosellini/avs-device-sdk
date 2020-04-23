@@ -42,7 +42,7 @@ public:
      * 
      * @return the decoded device confirmation code if present or the empty string if not.
      */
-    std::string decodeVolatileIdentificationCode(std::string directivePayload);
+    std::string extractVolatileCode(std::string directivePayload);
 
     /**
      * Confirms this device is a MyCook device by calling the Taurus Device 
@@ -68,7 +68,7 @@ private:
     const std::string HEADER_LINE_CONTENT_TYPE = "Content-Type: application/json";
     
     // Field name of the decoded device uuid sent back to the device confirmation service to confirm the device. 
-    const std::string POST_DATA_DEVICE_ID = "tempDeviceUUID";
+    const std::string POST_DATA_DEVICE_ID = "volatileCode";
 
     // SkillId of the MyCook companion custom skill.
     std::string taurusCompanionSkillId;
@@ -98,7 +98,7 @@ private:
      * @param payload the payload extracted from the AVS directive potentially containing the encoded volatile device identification code.
      * @return the decoded code or the empty string if no volatile code is present.
      */
-    std::string doDecodeVolatileIdentificationCode(std::string payload);
+    std::string doExtractVolatileCode(std::string payload);
 };
 
 } // namespace adsl

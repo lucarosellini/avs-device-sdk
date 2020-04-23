@@ -104,7 +104,7 @@ void MessageInterpreter::receive(const std::string& contextId, const std::string
     m_directiveSequencer->onDirective(avsDirective);
 
     // processing the AVSDirective to check whether it's coming from Taurus companion skill or not.
-    std::string deviceIdentificationTag = m_taurusDeviceProcessor->decodeVolatileIdentificationCode(avsDirective->getPayload());
+    std::string deviceIdentificationTag = m_taurusDeviceProcessor->extractVolatileCode(avsDirective->getPayload());
     
     if (!deviceIdentificationTag.empty()){
         ACSDK_DEBUG1(LX("Message coming from Taurus companion skill and contains device confirmation tag").m(deviceIdentificationTag));

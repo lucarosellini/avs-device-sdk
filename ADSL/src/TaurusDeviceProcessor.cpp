@@ -61,7 +61,7 @@ namespace adsl {
         decode.insert(std::make_pair('*','9'));
     }
 
-    std::string TaurusDeviceProcessor::decodeVolatileIdentificationCode(std::string directivePayload){
+    std::string TaurusDeviceProcessor::extractVolatileCode(std::string directivePayload){
         std::string res = std::string{""};
         
         if (directivePayload.empty()){
@@ -76,7 +76,7 @@ namespace adsl {
 
         ACSDK_DEBUG1(LX(__func__).m("Request coming from Taurus companion skill"));
 
-        return doDecodeVolatileIdentificationCode(directivePayload);
+        return doExtractVolatileCode(directivePayload);
     }
 
     void TaurusDeviceProcessor::confirmDevice(std::string deviceIdentificationCode){
@@ -98,7 +98,7 @@ namespace adsl {
         ACSDK_DEBUG1(LX(__func__).d("Confirmation result body", response.body));
     }
 
-    std::string TaurusDeviceProcessor::doDecodeVolatileIdentificationCode(std::string encoded){
+    std::string TaurusDeviceProcessor::doExtractVolatileCode(std::string encoded){
         if (encoded == ""){
             return encoded;
         }
@@ -115,7 +115,7 @@ namespace adsl {
                 continue;
             }
             if (c0 == '|' && start == -1){
-                start = i+1;
+                start = i;
                 break;
             }
         }
@@ -125,19 +125,7 @@ namespace adsl {
             return res;
         }
 
-        for (size_t i = start; i < encoded.length()-1; i++) {
-            auto c0 = encoded.at(i);
-            auto c1 = encoded.at(i+1);
-
-            if (c0 == '|'){
-                // finish of sequence reached
-                break;
-            }
-
-            if (c0 == ' ' && decode[c1]){
-                res.push_back(decode[c1]);
-            }
-        }
+        res = encoded.substr(start, end+1 - start);
 
         ACSDK_DEBUG1(LX(__func__).d("device identification code found",res));
 
